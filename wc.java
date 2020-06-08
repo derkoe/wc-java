@@ -5,7 +5,8 @@ class wc {
     public static void main(String[] args) throws IOException {
         int lineCount = 0, wordCount = 0, charCount = 0, count;
         char[] cbuf = new char[16 * 1024];
-        try (Reader reader = new InputStreamReader(Files.newInputStream(Paths.get(args[0])))) {
+        InputStream is = args.length == 0 ? System.in : Files.newInputStream(Paths.get(args[0]));
+        try (Reader reader = new InputStreamReader(is)) {
             boolean prevWhitespace = true;
             while ((count = reader.read(cbuf)) >= 0) {
                 for (int i = 0; i < count; i++) {
@@ -23,7 +24,9 @@ class wc {
                 }
             }
         }
-        System.out.println(lineCount + " " + wordCount + " " + charCount + " " + args[0]);
+
+        String fileName = args.length > 0 ? " " + args[0] : "";
+        System.out.printf("%7d %7d %7d %s\n", lineCount, wordCount, charCount, fileName);
     }
 
     private static boolean isWhitespace(int charVal) {
